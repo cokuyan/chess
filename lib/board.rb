@@ -1,4 +1,4 @@
-require_relative 'chess_pieces.rb'
+require_relative 'pieces.rb'
 
 class ChessError < StandardError
 end
