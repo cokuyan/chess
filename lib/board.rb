@@ -1,36 +1,30 @@
 require_relative 'pieces.rb'
-
-class ChessError < StandardError
-end
-
-class PieceSelectionError < ChessError
-  def message
-    "You chose an empty spot!"
-  end
-end
-
-class InCheckError < ChessError
-  def message
-    "You're still in check!"
-  end
-end
-
-class InvalidMoveError < ChessError
-  def message
-    "Invalid move!"
-  end
-end
-
-class InvalidPositionError < ChessError
-end
-
+require_relative 'errors.rb'
 
 class Board
 
-  def initialize
+  def initialize(setup = true)
     @board = Array.new(8) {Array.new(8)}
 
-    initialize_sides
+    initialize_sides if setup
+  end
+
+  def [](pos)
+    raise "not on board" unless on_board?(pos)
+
+    x,y = pos
+    @board[x][y]
+  end
+
+  def []=(pos, value)
+    raise "not on board" unless on_board?(pos)
+
+    x,y = pos
+    @board[x][y] = value
+  end
+
+  def on_board?(pos)
+    pos.all? { |el| el.between?(0,7) }
   end
 
   def move(start, end_pos)
@@ -65,17 +59,9 @@ class Board
 
   # have each piece place itself on board
   def dup
-    dupped_board = Board.new
+    dupped_board = Board.new(false)
 
-    @board.each_index do |row|
-      @board[row].each_with_index do |piece, col|
-        pos = [row, col]
-
-        new_piece = piece.nil? ? nil : piece.dup(dupped_board)
-
-        dupped_board[pos] = new_piece
-      end
-    end
+    @board.flatten.compact.each { |piece| piece.dup(dupped_board) }
 
     dupped_board
   end
@@ -98,17 +84,7 @@ class Board
   end
 
 
-  def [](pos)
-    x,y = pos
-    return nil unless x.between?(0,7) && y.between?(0,7)
-    @board[x][y]
-  end
 
-  def []=(pos, value)
-    x,y = pos
-    raise InvalidPositionError unless x.between?(0,7) && y.between?(0,7)
-    @board[x][y] = value
-  end
 
   def stalemate?(color)
     return false if checkmate?(color)
@@ -117,13 +93,11 @@ class Board
 
   def checkmate?(color)
     return false unless in_check?(color)
-
     all_valid_moves(color).empty?
   end
 
   def in_check?(color)
     king = find_king(color)
-
     all_moves(enemy_color(color)).include?(king.pos)
   end
 

@@ -25,7 +25,7 @@ class SlidingPiece < Piece
   def moves
     moves = []
 
-    self.class::DELTAS.each do |(dx,dy)|
+    self.move_dir.each do |(dx,dy)|
       x, y = @pos[0] + dx, @pos[1] + dy
       while x.between?(0,7) && y.between?(0,7) && @board[[x, y]].nil?
         moves << [x, y]

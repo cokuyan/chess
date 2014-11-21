@@ -1,4 +1,8 @@
-class Rook < SlidingPiece
+require_relative 'piece.rb'
+require_relative 'sliding.rb'
+
+class Rook < Piece
+  include 'sliding'
 
   def move_dir
     sideways
