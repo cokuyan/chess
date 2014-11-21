@@ -27,7 +27,7 @@ class SlidingPiece < Piece
 
     self.move_dir.each do |(dx,dy)|
       x, y = @pos[0] + dx, @pos[1] + dy
-      while x.between?(0,7) && y.between?(0,7) && @board[[x, y]].nil?
+      while on_board?([x, y]) && @board[[x, y]].nil?
         moves << [x, y]
         x += dx
         y += dy
