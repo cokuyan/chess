@@ -1,4 +1,4 @@
-class SlidingPiece < Piece
+module Sliding
 
   SIDEWAYS = [
     [1,0],
@@ -25,15 +25,15 @@ class SlidingPiece < Piece
   def moves
     moves = []
 
-    self.move_dir.each do |(dx,dy)|
-      x, y = @pos[0] + dx, @pos[1] + dy
-      while on_board?([x, y]) && @board[[x, y]].nil?
-        moves << [x, y]
-        x += dx
-        y += dy
+    self.move_dir.each do |dir|
+      move = @pos.zip(dir).map { |coor| coor.inject(:+) }
+      # x, y = @pos[0] + dx, @pos[1] + dy
+      while @board.on_board?(move) && @board[move].nil?
+        moves << move
+        move = move.zip(dir).map { |coor| coor.inject(:+) }
       end
       # check if enemy piece in [x, y], and add it
-      moves << [x, y] if @board[[x,y]] && @board[[x,y]].is_enemy?(self)
+      moves << move if @board[move] && @board[move].is_enemy?(self)
     end
 
     moves

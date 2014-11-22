@@ -1,12 +1,11 @@
-class SteppingPiece < Piece
+module Stepping
 
   def moves
     moves = []
 
-    x, y = @pos
-    self.class::DELTAS.each do |(dx,dy)|
-      move = [x + dx, y + dy]
-      next unless move.all? { |el| el.between?(0,7) }
+    self.move_dir.each do |dir|
+      move = @pos.zip(dir).map { |coor| coor.inject(:+) }
+      next unless @board.on_board?(move)
       moves << move if @board[move].nil? || @board[move].is_enemy?(self)
     end
 

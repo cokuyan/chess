@@ -1,4 +1,8 @@
-class King < SteppingPiece
+require_relative 'piece.rb'
+require_relative 'stepping.rb'
+
+class King < Piece
+  include 'stepping'
 
   DELTAS = [
             [1,0],
@@ -10,6 +14,10 @@ class King < SteppingPiece
             [1,1],
             [-1,-1]
             ]
+
+  def move_dir
+    DELTAS
+  end
 
   def castle(start, end_pos)
     difference = start[1] - end_pos[1]
