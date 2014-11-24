@@ -2,7 +2,7 @@ require_relative 'piece.rb'
 require_relative 'stepping.rb'
 
 class King < Piece
-  include 'stepping'
+  include Stepping
 
   DELTAS = [
             [1,0],

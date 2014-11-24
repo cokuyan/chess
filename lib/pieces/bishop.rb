@@ -2,7 +2,7 @@ require_relative 'piece.rb'
 require_relative 'sliding.rb'
 
 class Bishop < Piece
-  include 'sliding'
+  include Sliding
 
   def move_dir
     diagonal
