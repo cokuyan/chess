@@ -4,7 +4,7 @@ module Stepping
     moves = []
 
     self.move_dir.each do |dir|
-      move = @pos.zip(dir).map { |coor| coor.inject(:+) }
+      move = add_arrays(@pos, dir)
       next unless @board.on_board?(move)
       moves << move if @board[move].nil? || @board[move].is_enemy?(self)
     end

@@ -26,11 +26,11 @@ module Sliding
     moves = []
 
     self.move_dir.each do |dir|
-      move = @pos.zip(dir).map { |coor| coor.inject(:+) }
+      move = add_arrays(@pos, dir)
       # x, y = @pos[0] + dx, @pos[1] + dy
       while @board.on_board?(move) && @board[move].nil?
         moves << move
-        move = move.zip(dir).map { |coor| coor.inject(:+) }
+        move = add_arrays(move, dir)
       end
       # check if enemy piece in [x, y], and add it
       moves << move if @board[move] && @board[move].is_enemy?(self)

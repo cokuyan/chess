@@ -2,7 +2,7 @@
 
 class Piece
   attr_writer :pos, :has_moved
-  attr_reader :pos, :color, :has_moved
+  attr_reader :pos, :color
 
 
   def initialize(pos, board, color, has_moved = false)
@@ -16,6 +16,10 @@ class Piece
   def moves
     raise NotImplementedError
     # return array of places can move
+  end
+
+  def has_moved?
+    @has_moved
   end
 
   def dup(board)
@@ -40,6 +44,10 @@ class Piece
 
   def is_enemy?(piece)
     self.color != piece.color
+  end
+
+  def add_arrays(arr1, arr2)
+    arr1.zip(arr2).map { |el| el.inject(:+) }
   end
 
 end

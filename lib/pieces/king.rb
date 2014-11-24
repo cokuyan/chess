@@ -19,6 +19,7 @@ class King < Piece
     DELTAS
   end
 
+  # change so that this is called only if a castling move is given
   def castle(start, end_pos)
     difference = start[1] - end_pos[1]
     return if difference.abs == 1
@@ -35,6 +36,7 @@ class King < Piece
 
   def valid_moves
     moves = super
+    return moves if has_moved?
 
     right_castle = [@pos.first, @pos.last + 2]
     left_castle = [@pos.first, @pos.last - 2]
@@ -57,7 +59,6 @@ class King < Piece
 
   def can_castle?(rook)
     return false if move_into_check?(@pos)
-    return false if @has_moved
     return false if rook.nil?
 
 
