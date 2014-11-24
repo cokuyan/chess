@@ -40,7 +40,6 @@ class Board
     else
       piece.has_moved = true
     end
-    piece.en_passant(start) if piece.is_a?(Pawn)
     piece.promote if piece.is_a?(Pawn) && (end_pos[0] == 0 || end_pos[0] == 7)
   end
 
@@ -49,6 +48,11 @@ class Board
     # raise PieceSelectionError if piece.nil?
     if piece.is_a?(King) && (start[1] - end_pos[1]).abs == 2
       piece.castle(start, end_pos)
+    end
+
+    if piece.is_a?(Pawn) && @board[end_pos].nil? &&
+       piece.diag_moves.include?(end_pos)
+      # trigger en passant
     end
 
     self[start] = nil

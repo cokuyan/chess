@@ -37,8 +37,6 @@ class Pawn < Piece
     response.new(@pos, @board, @color, true)
   end
 
-  private
-
   def has_moved?
     @has_moved
   end
