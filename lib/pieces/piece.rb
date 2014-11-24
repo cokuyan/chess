@@ -23,14 +23,14 @@ class Piece
   end
 
   def dup(board)
-    self.class.new(@pos, board, @color)
+    self.class.new(@pos, board, @color, has_moved?)
   end
 ############################################
   def move_into_check?(pos)
     test_board = @board.dup
-    p test_board[self.pos].class
-    p self.pos
-    p pos
+    # p test_board[self.pos].class
+    # p self.pos
+    # p pos
     test_board.move!(self.pos, pos)
     test_board.in_check?(self.color)
   end

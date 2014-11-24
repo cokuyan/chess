@@ -5,7 +5,6 @@ class Board
 
   def initialize(setup = true)
     @board = Array.new(8) {Array.new(8)}
-
     initialize_sides if setup
   end
 
@@ -27,15 +26,15 @@ class Board
     pos.all? { |el| el.between?(0,7) }
   end
 
-  def move(start, end_pos)
+  def move_piece(start, end_pos)
     piece = self[start]
 
     raise PieceSelectionError if piece.nil?
-    # potential board change from these checks for computer player
     raise InCheckError if piece.move_into_check?(end_pos)
-    raise InvalidMoveError unless piece.valid_moves.include?(end_pos)
+    raise InvalidMoveError unless piece.moves.include?(end_pos)
 
-    move!(start, end_pos)
+    move_piece!(start, end_pos)
+    # need to move these to pawn class
     if piece.is_a?(Pawn) && (start[0] - end_pos[0]).abs == 2
       piece.has_moved = :two_spaces
     else
@@ -45,28 +44,25 @@ class Board
     piece.promote if piece.is_a?(Pawn) && (end_pos[0] == 0 || end_pos[0] == 7)
   end
 
-  def move!(start, end_pos)
+  def move_piece!(start, end_pos)
     piece = self[start]
     # raise PieceSelectionError if piece.nil?
-
-    piece.castle(start, end_pos) if piece.is_a?(King)
+    if piece.is_a?(King) && (start[1] - end_pos[1]).abs == 2
+      piece.castle(start, end_pos)
+    end
 
     self[start] = nil
     self[end_pos] = piece
     piece.pos = end_pos
-
   end
 
-  # have each piece place itself on board
   def dup
     dupped_board = Board.new(false)
-
     @board.flatten.compact.each { |piece| piece.dup(dupped_board) }
-
     dupped_board
   end
 
-
+  # need to refactor
   def render
     puts "   " + ('A'..'H').to_a.join("   ")
     puts " ┌" + "───┬" * 7 + "───┐"
@@ -82,9 +78,6 @@ class Board
     puts " └" + "───┴" * 7 + "───┘"
     puts "   " + ('A'..'H').to_a.join("   ")
   end
-
-
-
 
   def stalemate?(color)
     return false if checkmate?(color)
@@ -102,7 +95,7 @@ class Board
   end
 
   def all_pieces(color)
-    @board.flatten.select { |piece| piece && piece.color == color }
+    @board.flatten.compact.select { |piece| piece.color == color }
   end
 
   private
@@ -115,7 +108,6 @@ class Board
     initialize_pieces(:white)
     initialize_pieces(:black)
   end
-
 
   def initialize_pieces(color)
     row = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
@@ -134,17 +126,13 @@ class Board
 
   def all_moves(color)
     all_moves = []
-
     all_pieces(color).each { |piece| all_moves += piece.moves }
-
     all_moves.uniq
   end
 
   def all_valid_moves(color)
     all_valid_moves = []
-
     all_pieces(color).each { |piece| all_valid_moves += piece.valid_moves }
-
     all_valid_moves.uniq
   end
 

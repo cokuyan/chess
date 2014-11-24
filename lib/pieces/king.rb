@@ -22,14 +22,12 @@ class King < Piece
   # change so that this is called only if a castling move is given
   def castle(start, end_pos)
     difference = start[1] - end_pos[1]
-    return if difference.abs == 1
 
     if difference > 0
       rook_pos = [@pos.first, 0]
       @board.move!(rook_pos, [rook_pos[0], rook_pos[1] + 3])
     else
       rook_pos = [@pos.first, 7]
-
       @board.move!(rook_pos, [rook_pos[0], rook_pos[1] - 2])
     end
   end
