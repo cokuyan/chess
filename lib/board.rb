@@ -34,15 +34,9 @@ class Board
     raise InvalidMoveError unless piece.moves.include?(end_pos)
 
     move_piece!(start, end_pos)
-    # need to move these to pawn class
-    if piece.is_a?(Pawn) && (start[0] - end_pos[0]).abs == 2
-      piece.has_moved = :two_spaces
-    else
-      piece.has_moved = true
-    end
-    piece.promote if piece.is_a?(Pawn) && (end_pos[0] == 0 || end_pos[0] == 7)
   end
 
+  # have this call Piece#move method
   def move_piece!(start, end_pos)
     piece = self[start]
     # raise PieceSelectionError if piece.nil?
@@ -50,14 +44,7 @@ class Board
       piece.castle(start, end_pos)
     end
 
-    if piece.is_a?(Pawn) && @board[end_pos].nil? &&
-       piece.diag_moves.include?(end_pos)
-      # trigger en passant
-    end
-
-    self[start] = nil
-    self[end_pos] = piece
-    piece.pos = end_pos
+    piece.move(end_pos)
   end
 
   def dup

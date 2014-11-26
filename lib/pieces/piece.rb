@@ -4,13 +4,13 @@ class Piece
   attr_writer :pos, :has_moved
   attr_reader :pos, :color
 
-
+  # has_moved only in initialize for other classes (king, pawn)
   def initialize(pos, board, color, has_moved = false)
     @pos, @board, @color = pos, board, color
 
     #piece places self
     @board[@pos] = self
-    @has_moved = has_moved # may change
+    # @has_moved = has_moved # may change
   end
 
   def moves
@@ -48,6 +48,12 @@ class Piece
 
   def add_arrays(arr1, arr2)
     arr1.zip(arr2).map { |el| el.inject(:+) }
+  end
+
+  def move(end_pos)
+    @board[pos] = nil
+    @board[end_pos] = self
+    @pos = end_pos
   end
 
 end

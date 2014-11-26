@@ -5,6 +5,12 @@ class Pawn < Piece
           [1,-1]
          ]
 
+  def initialize(pos, board, color, has_moved = false)
+    super(pos, board, color)
+    @has_moved = has_moved
+    @moved_two = false
+  end
+
   def moves
     forward_moves + diag_moves
   end
@@ -13,13 +19,25 @@ class Pawn < Piece
     color == :white ? '♙' : "♟"
   end
 
-  # Needs to be refactored, especially in Board::move
-  def en_passant(start_pos)
-    passant_pawn = @board[[start_pos[0], @pos[1]]]
-    return if passant_pawn.nil?
-    if passant_pawn.is_enemy?(self) && passant_pawn.has_moved == :two_spaces
-      @board[[start_pos[0], @pos[1]]] = nil
+  def move(end_pos)
+    @has_moved = true
+    # check move two positions
+    @moved_two = (pos[0] - end_pos[0]).abs == 2
+    # also check if en passant
+    # put checks into own method?
+    if @board[end_pos].nil? &&
+       piece.diag_moves.include?(end_pos)
+      en_passant(end_pos)
     end
+
+    promote if [0,7].include?(end_pos[0])
+
+    super
+  end
+
+  def en_passant(end_pos)
+    passant_pos = [pos[0], end_pos[1]]
+    @board[passant_pos] = nil
   end
 
   def promote
@@ -39,6 +57,10 @@ class Pawn < Piece
 
   def has_moved?
     @has_moved
+  end
+
+  def moved_two?
+    @moved_two
   end
 
   def forward_moves
