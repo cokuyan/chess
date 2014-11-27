@@ -5,15 +5,15 @@ class King < Piece
   include Stepping
 
   DELTAS = [
-            [1,0],
-            [-1,0],
-            [0,1],
-            [0,-1],
-            [1,-1],
-            [-1,1],
-            [1,1],
-            [-1,-1]
-            ]
+    [1,0],
+    [-1,0],
+    [0,1],
+    [0,-1],
+    [1,-1],
+    [-1,1],
+    [1,1],
+    [-1,-1]
+  ]
 
   def initialize(pos, board, color, has_moved = false)
     super(pos, board, color)

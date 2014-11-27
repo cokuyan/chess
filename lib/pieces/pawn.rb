@@ -1,9 +1,9 @@
 class Pawn < Piece
 
   DIAG = [
-          [1,1],
-          [1,-1]
-         ]
+    [1,1],
+    [1,-1]
+  ]
 
   def initialize(pos, board, color, has_moved = false)
     super(pos, board, color)
