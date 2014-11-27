@@ -40,6 +40,8 @@ class Board
   def move_piece!(start, end_pos)
     piece = self[start]
     # raise PieceSelectionError if piece.nil?
+
+    #move this to king class
     if piece.is_a?(King) && (start[1] - end_pos[1]).abs == 2
       piece.castle(start, end_pos)
     end

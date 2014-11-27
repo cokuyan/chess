@@ -15,68 +15,70 @@ class King < Piece
             [-1,-1]
             ]
 
+  def initialize(pos, board, color, has_moved = false)
+    super(pos, board, color)
+    @has_moved = has_moved
+  end
+
+  def has_moved?
+    @has_moved
+  end
+
   def move_dir
     DELTAS
   end
 
-  # change so that this is called only if a castling move is given
-  def castle(start, end_pos)
-    difference = start[1] - end_pos[1]
+  def move(end_pos)
+    @has_moved = true
+    start = pos
+    super
+    castle if (start[1] - end_pos[1]) == 2
+  end
 
-    if difference > 0
+  def castle
+    if pos[1] == 2
       rook_pos = [@pos.first, 0]
-      @board.move!(rook_pos, [rook_pos[0], rook_pos[1] + 3])
+      end_pos = add_arrays(rook_pos, [0, 3])
+      @board[rook_pos].move(end_pos)
     else
-      rook_pos = [@pos.first, 7]
-      @board.move!(rook_pos, [rook_pos[0], rook_pos[1] - 2])
+      rook_pos = [@pos.first, 0]
+      end_pos = add_arrays(rook_pos, [0, -2])
+      @board[rook_pos].move(end_pos)
     end
   end
 
+  # make a valid_castle_move?(pos) method instead?
   def valid_moves
     moves = super
-    return moves if has_moved?
+    return moves if has_moved? || !can_castle?
 
-    right_castle = [@pos.first, @pos.last + 2]
-    left_castle = [@pos.first, @pos.last - 2]
+    right_castle = add_arrays(@pos, [0, 2])
+    left_castle = add_arrays(@pos, [0, -2])
 
-    moves << right_castle if can_castle?(get_rooks[1])
-    moves << left_castle if can_castle?(get_rooks[0])
+    moves << right_castle if can_castle_right?
+    moves << left_castle if can_castle_left?
     moves
   end
 
-  def get_rooks
-    rooks = @board.all_pieces(@color).select do |piece|
-      piece.is_a?(Rook) && !piece.has_moved
-    end
-
-    right_rook = rooks.select { |rook| rook.pos[1] == 7 }.first
-    left_rook = rooks.select { |rook| rook.pos[1] == 0 }.first
-
-    [left_rook, right_rook]
+  def can_castle?
+    !has_moved? && !in_check?(color) &&
+    (can_castle_right? || can_castle_left?)
   end
 
-  def can_castle?(rook)
-    return false if move_into_check?(@pos)
-    return false if rook.nil?
-
-
-    if self.pos[1] < rook.pos[1]
-      (self.pos[1] + 1...rook.pos[1]).each do |col|
-        space_pos = [self.pos[0], col]
-        return false if @board[space_pos] || move_into_check?(space_pos)
-      end
-
-    else
-      (rook.pos[1] + 1...self.pos[1]).each do |col|
-        space_pos = [self.pos[0], col]
-        return false if @board[space_pos] ||
-                        (col > 1 && move_into_check?(space_pos))
-      end
-    end
-
-    true
+  def can_castle_right?
+    rook = @board[add_arrays(@pos, [0, 3])]
+    [1, 2].map { |el| add_arrays(@pos, [0, el]) }
+          .none? { |pos| !@board(pos).nil? || move_into_check?(pos) } &&
+    rook && rook.is_a?(Rook) && !rook.has_moved?
   end
 
+  def can_castle_left?
+    rook = @board[add_arrays(@pos, [0, -4])]
+    [1, 2].map { |el| add_arrays(@pos, [0, -el]) }
+          .none? { |pos| !@board(pos).nil? || move_into_check?(pos) } &&
+    @board[@pos[0], 1].nil? &&
+    rook && rook.is_a?(Rook) && !rook.has_moved?
+  end
 
   def render
     color == :white ? '♔' : '♚'

@@ -1,8 +1,8 @@
 # encoding: utf-8
 
 class Piece
-  attr_writer :pos, :has_moved
-  attr_reader :pos, :color
+  attr_accessor :pos
+  attr_reader :color
 
   # has_moved only in initialize for other classes (king, pawn)
   def initialize(pos, board, color, has_moved = false)
