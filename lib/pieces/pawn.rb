@@ -25,12 +25,18 @@ class Pawn < Piece
     @moved_two = ((pos[0] - end_pos[0]).abs == 2)
     # also check if en passant
     # put checks into own method?
-    if @board[end_pos].nil? && diag_moves.include?(end_pos)
-      en_passant(end_pos)
-    end
+    en_passant(end_pos) if @board[end_pos].nil? && diag_moves.include?(end_pos)
 
     super
   end
+
+  protected
+
+  def moved_two?
+    @moved_two
+  end
+
+  private
 
   def en_passant(end_pos)
     passant_pos = [pos[0], end_pos[1]]
@@ -39,10 +45,6 @@ class Pawn < Piece
 
   def has_moved?
     @has_moved
-  end
-
-  def moved_two?
-    @moved_two
   end
 
   def forward_moves

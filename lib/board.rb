@@ -83,26 +83,11 @@ class Board
     @board.flatten.compact.select { |piece| piece.color == color }
   end
 
+
   private
 
   def find_king(color)
     all_pieces(color).select { |piece| piece.is_a?(King) }.first
-  end
-
-  def initialize_sides
-    initialize_pieces(:white)
-    initialize_pieces(:black)
-  end
-
-  def initialize_pieces(color)
-    row = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
-    back_row, front_row = (color == :white ? [7,6] : [0,1])
-
-    8.times { |col| Pawn.new([front_row, col], self, color) }
-
-    row.each_with_index do |piece, col|
-      piece.new([back_row, col], self, color)
-    end
   end
 
   def enemy_color(color)
@@ -119,6 +104,22 @@ class Board
     all_valid_moves = []
     all_pieces(color).each { |piece| all_valid_moves += piece.valid_moves }
     all_valid_moves.uniq
+  end
+
+  def initialize_sides
+    initialize_pieces(:white)
+    initialize_pieces(:black)
+  end
+
+  def initialize_pieces(color)
+    row = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
+    back_row, front_row = (color == :white ? [7,6] : [0,1])
+
+    8.times { |col| Pawn.new([front_row, col], self, color) }
+
+    row.each_with_index do |piece, col|
+      piece.new([back_row, col], self, color)
+    end
   end
 
 end

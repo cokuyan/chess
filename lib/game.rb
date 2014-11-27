@@ -53,6 +53,7 @@ class Game
     end
   end
 
+
   private
 
   def over?
@@ -69,7 +70,6 @@ class Game
       puts "You won!"
     end
   end
-
 
   def switch_player
     @current_player = @current_player == @white ? @black : @white

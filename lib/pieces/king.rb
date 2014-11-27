@@ -21,6 +21,11 @@ class King < Piece
     @has_moved = has_moved
   end
 
+  def render
+    symbol = color == :white ? '♔' : '♚'
+    @board.in_check?(color)? symbol.on_red : symbol
+  end
+
   def has_moved?
     @has_moved
   end
@@ -35,6 +40,13 @@ class King < Piece
     super
   end
 
+  def valid_moves
+    moves = super
+    moves + castle_moves
+  end
+
+  private
+
   def castle
     if pos[1] == 2
       rook_pos = [@pos.first, 0]
@@ -45,11 +57,6 @@ class King < Piece
       end_pos = add_arrays(rook_pos, [0, -2])
       @board[rook_pos].move(end_pos)
     end
-  end
-
-  def valid_moves
-    moves = super
-    moves + castle_moves
   end
 
   def castle_moves
@@ -78,11 +85,6 @@ class King < Piece
           .none? { |pos| !@board[pos].nil? || move_into_check?(pos) } &&
     @board[[@pos[0], 1]].nil? &&
     rook && rook.is_a?(Rook) && !rook.has_moved?
-  end
-
-  def render
-    symbol = color == :white ? '♔' : '♚'
-    @board.in_check?(color)? symbol.on_red : symbol
   end
 
 end
