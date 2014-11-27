@@ -40,6 +40,7 @@ class Game
       end
     end
 
+    @game_board.render
     end_game
   end
 
@@ -92,14 +93,12 @@ class HumanPlayer
     puts "#{@color.to_s.capitalize}'s turn"
     puts "You are in check" if @game_board.in_check?(@color)
     puts
-    puts "Enter 'save' to save, 'quit' to quit"
-    puts "Press any key to continue"
+    puts "Enter piece to move, 'save' to save, or 'quit' to quit"
 
-    response = gets.chomp.downcase
-    return response.to_sym if response == "save" || response == "quit"
+    start = gets.chomp.downcase
+    return start.to_sym if start == "save" || start == "quit"
 
-    puts "Which piece would you like to move?"
-    start = gets.chomp.split('')
+    start = start.split('')
     puts "Where would you like to move it?"
     end_pos = gets.chomp.split('')
     start, end_pos = convert(start), convert(end_pos)

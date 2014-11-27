@@ -36,11 +36,8 @@ class Board
     move_piece!(start, end_pos)
   end
 
-  # have this call Piece#move method
   def move_piece!(start, end_pos)
     piece = self[start]
-    # raise PieceSelectionError if piece.nil?
-
     piece.move(end_pos)
   end
 
