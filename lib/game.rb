@@ -30,10 +30,11 @@ class Game
           return
         end
         @game_board.move_piece(start, end_pos)
+        # check for pawn promotion
         piece = @game_board[end_pos]
         @current_player.promote(piece) if piece.is_a?(Pawn) && [0,7].include?(end_pos[0])
-        switch_player
 
+        switch_player
       rescue ChessError => e
         puts e.message
         retry
@@ -60,12 +61,10 @@ class Game
   end
 
   def end_game
-    # current player is in checkmate
     if @game_board.stalemate?(@current_player.color)
       puts "Stalemate"
     else
       switch_player
-
       puts "Congratulations, #{@current_player.color.to_s.capitalize}!"
       puts "You won!"
     end
@@ -153,11 +152,9 @@ class ComputerPlayer
     puts "#{@color.to_s.capitalize}'s turn"
     puts "You are in check" if game_board.in_check?(@color)
 
-    while true
+    loop do
       piece = game_board.all_pieces(color).sample
-
       move = piece.valid_moves.sample
-
       break unless move.nil?
     end
     sleep 1

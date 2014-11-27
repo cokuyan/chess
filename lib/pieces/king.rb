@@ -1,3 +1,4 @@
+require 'colorize'
 require_relative 'piece.rb'
 require_relative 'stepping.rb'
 
@@ -30,9 +31,8 @@ class King < Piece
 
   def move(end_pos)
     @has_moved = true
-    start = pos
+    castle if (end_pos[1] - pos[1]).abs == 2
     super
-    castle if (start[1] - end_pos[1]) == 2
   end
 
   def castle
@@ -41,22 +41,22 @@ class King < Piece
       end_pos = add_arrays(rook_pos, [0, 3])
       @board[rook_pos].move(end_pos)
     else
-      rook_pos = [@pos.first, 0]
+      rook_pos = [@pos.first, 7]
       end_pos = add_arrays(rook_pos, [0, -2])
       @board[rook_pos].move(end_pos)
     end
   end
 
-  # make a valid_castle_move?(pos) method instead?
   def valid_moves
     moves = super
-    return moves if has_moved? || !can_castle?
+    moves + castle_moves
+  end
 
-    right_castle = add_arrays(@pos, [0, 2])
-    left_castle = add_arrays(@pos, [0, -2])
-
-    moves << right_castle if can_castle_right?
-    moves << left_castle if can_castle_left?
+  def castle_moves
+    moves = []
+    return moves unless can_castle?
+    moves << add_arrays(@pos, [0, 2]) if can_castle_right?
+    moves << add_arrays(@pos, [0, -2]) if can_castle_left?
     moves
   end
 
@@ -81,7 +81,8 @@ class King < Piece
   end
 
   def render
-    color == :white ? '♔' : '♚'
+    symbol = color == :white ? '♔' : '♚'
+    @board.in_check?(color)? symbol.on_red : symbol
   end
 
 end

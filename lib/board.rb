@@ -31,7 +31,7 @@ class Board
 
     raise PieceSelectionError if piece.nil?
     raise InCheckError if piece.move_into_check?(end_pos)
-    raise InvalidMoveError unless piece.moves.include?(end_pos)
+    raise InvalidMoveError unless piece.valid_moves.include?(end_pos)
 
     move_piece!(start, end_pos)
   end

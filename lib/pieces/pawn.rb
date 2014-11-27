@@ -68,6 +68,7 @@ class Pawn < Piece
       next unless @board.on_board?(move)
       passant_pos = [@pos.first, @pos.last + dir.last]
       if (@board[move] && @board[move].is_enemy?(self)) ||
+          # passant moves method? or passant checker?
          (@board[passant_pos].is_a?(Pawn) &&
           @board[passant_pos].is_enemy?(self) &&
           @board[passant_pos].moved_two?)

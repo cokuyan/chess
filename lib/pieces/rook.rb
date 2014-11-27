@@ -9,6 +9,10 @@ class Rook < Piece
     @has_moved = has_moved
   end
 
+  def render
+    color == :white ? '♖' : "♜"
+  end
+
   def has_moved?
     @has_moved
   end
@@ -20,10 +24,6 @@ class Rook < Piece
 
   def move_dir
     sideways
-  end
-
-  def render
-    color == :white ? '♖' : "♜"
   end
 
 end
