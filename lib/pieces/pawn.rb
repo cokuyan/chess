@@ -37,21 +37,6 @@ class Pawn < Piece
     @board[passant_pos] = nil
   end
 
-  def promote
-    puts 'What would you like to promote your pawn to?'
-    begin
-      response = Object.const_get(gets.chomp.capitalize)
-      if [King, Pawn].include?(response)
-        raise PromotionError.new("Cannot promote to #{response}")
-      end
-    rescue PromotionError => e
-      puts e.message
-      retry
-    end
-    @board[@pos] = nil
-    response.new(@pos, @board, @color, true)
-  end
-
   def has_moved?
     @has_moved
   end

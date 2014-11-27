@@ -34,7 +34,6 @@ class Board
     raise InvalidMoveError unless piece.moves.include?(end_pos)
 
     move_piece!(start, end_pos)
-    piece.promote if piece.is_a?(Pawn) && [0,7].include?(end_pos[0])
   end
 
   # have this call Piece#move method

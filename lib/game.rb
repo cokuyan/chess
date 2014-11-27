@@ -30,6 +30,8 @@ class Game
           return
         end
         @game_board.move_piece(start, end_pos)
+        piece = @game_board[end_pos]
+        @current_player.promote(piece) if piece.is_a?(Pawn) && [0,7].include?(end_pos[0])
         switch_player
 
       rescue ChessError => e
@@ -85,9 +87,10 @@ class HumanPlayer
   end
 
   def get_move(game_board)
-    game_board.render
+    @game_board = game_board
+    @game_board.render
     puts "#{@color.to_s.capitalize}'s turn"
-    puts "You are in check" if game_board.in_check?(@color)
+    puts "You are in check" if @game_board.in_check?(@color)
     puts
     puts "Enter 'save' to save, 'quit' to quit"
     puts "Press any key to continue"
@@ -101,8 +104,8 @@ class HumanPlayer
     end_pos = gets.chomp.split('')
     start, end_pos = convert(start), convert(end_pos)
 
-    raise EnemyPieceError if game_board[start] &&
-                             game_board[start].color != self.color
+    raise EnemyPieceError if @game_board[start] &&
+                             @game_board[start].color != self.color
 
     [start, end_pos]
   end
@@ -112,6 +115,21 @@ class HumanPlayer
     second = 8 - position[1].to_i
 
     [second, first]
+  end
+
+  def promote(pawn)
+    puts 'What would you like to promote your pawn to?'
+    begin
+      response = Object.const_get(gets.chomp.capitalize)
+      if [King, Pawn].include?(response)
+        raise PromotionError.new("Cannot promote to #{response}")
+      end
+    rescue PromotionError => e
+      puts e.message
+      retry
+    end
+    @game_board[pawn.pos] = nil
+    response.new(pawn.pos, @game_board, pawn.color, true)
   end
 
 end
@@ -124,8 +142,13 @@ class ComputerPlayer
     @color = color
   end
 
+  def promote(pawn)
+    @game_board[pawn.pos] = nil
+    Queen.new(pawn.pos, @game_board, pawn.color, true)
+  end
+
   def get_move(game_board)
-    # @game_board = game_board
+    @game_board = game_board
 
     game_board.render
     puts "#{@color.to_s.capitalize}'s turn"
