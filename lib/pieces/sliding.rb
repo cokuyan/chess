@@ -33,7 +33,7 @@ module Sliding
         move = add_arrays(move, dir)
       end
       # check if enemy piece in [x, y], and add it
-      moves << move if @board[move] && @board[move].is_enemy?(self)
+      moves << move if @board.on_board?(move) && @board[move] && @board[move].is_enemy?(self)
     end
 
     moves
