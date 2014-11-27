@@ -29,7 +29,7 @@ class Game
         elsif start == :quit
           return
         end
-        @game_board.move(start, end_pos)
+        @game_board.move_piece(start, end_pos)
         switch_player
 
       rescue ChessError => e
@@ -125,14 +125,14 @@ class ComputerPlayer
   end
 
   def get_move(game_board)
-    @game_board = game_board
+    # @game_board = game_board
 
     game_board.render
     puts "#{@color.to_s.capitalize}'s turn"
     puts "You are in check" if game_board.in_check?(@color)
 
     while true
-      piece = @game_board.all_pieces(@color).sample
+      piece = game_board.all_pieces(color).sample
 
       move = piece.valid_moves.sample
 

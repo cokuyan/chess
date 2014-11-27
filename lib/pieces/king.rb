@@ -61,7 +61,7 @@ class King < Piece
   end
 
   def can_castle?
-    !has_moved? && !in_check?(color) &&
+    !has_moved? && !@board.in_check?(color) &&
     (can_castle_right? || can_castle_left?)
   end
 
@@ -76,7 +76,7 @@ class King < Piece
     rook = @board[add_arrays(@pos, [0, -4])]
     [1, 2].map { |el| add_arrays(@pos, [0, -el]) }
           .none? { |pos| !@board[pos].nil? || move_into_check?(pos) } &&
-    @board[@pos[0], 1].nil? &&
+    @board[[@pos[0], 1]].nil? &&
     rook && rook.is_a?(Rook) && !rook.has_moved?
   end
 

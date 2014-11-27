@@ -34,17 +34,13 @@ class Board
     raise InvalidMoveError unless piece.moves.include?(end_pos)
 
     move_piece!(start, end_pos)
+    piece.promote if piece.is_a?(Pawn) && [0,7].include?(end_pos[0])
   end
 
   # have this call Piece#move method
   def move_piece!(start, end_pos)
     piece = self[start]
     # raise PieceSelectionError if piece.nil?
-
-    #move this to king class
-    if piece.is_a?(King) && (start[1] - end_pos[1]).abs == 2
-      piece.castle(start, end_pos)
-    end
 
     piece.move(end_pos)
   end

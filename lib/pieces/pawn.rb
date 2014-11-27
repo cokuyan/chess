@@ -22,15 +22,12 @@ class Pawn < Piece
   def move(end_pos)
     @has_moved = true
     # check move two positions
-    @moved_two = (pos[0] - end_pos[0]).abs == 2
+    @moved_two = ((pos[0] - end_pos[0]).abs == 2)
     # also check if en passant
     # put checks into own method?
-    if @board[end_pos].nil? &&
-       piece.diag_moves.include?(end_pos)
+    if @board[end_pos].nil? && diag_moves.include?(end_pos)
       en_passant(end_pos)
     end
-
-    promote if [0,7].include?(end_pos[0])
 
     super
   end
@@ -44,14 +41,14 @@ class Pawn < Piece
     puts 'What would you like to promote your pawn to?'
     begin
       response = Object.const_get(gets.chomp.capitalize)
-      if response == King || response == Pawn
+      if [King, Pawn].include?(response)
         raise PromotionError.new("Cannot promote to #{response}")
       end
     rescue PromotionError => e
       puts e.message
       retry
     end
-
+    @board[@pos] = nil
     response.new(@pos, @board, @color, true)
   end
 
@@ -69,8 +66,9 @@ class Pawn < Piece
     move = add_arrays(@pos, move_dir)
     if @board.on_board?(move) && @board[move].nil?
       moves << move
+      return moves if has_moved?
       move = add_arrays(move, move_dir)
-      moves << move unless has_moved? && @board[move]
+      moves << move unless @board[move]
     end
 
     moves
@@ -87,7 +85,7 @@ class Pawn < Piece
       if (@board[move] && @board[move].is_enemy?(self)) ||
          (@board[passant_pos].is_a?(Pawn) &&
           @board[passant_pos].is_enemy?(self) &&
-          @board[passant_pos].has_moved == :two_spaces)
+          @board[passant_pos].moved_two?)
         moves << move
       end
     end

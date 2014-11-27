@@ -31,13 +31,19 @@ class Piece
     # p test_board[self.pos].class
     # p self.pos
     # p pos
-    test_board.move!(self.pos, pos)
+    test_board.move_piece!(self.pos, pos)
     test_board.in_check?(self.color)
   end
 ############################################
 
   def valid_moves
     self.moves.reject { |move| move_into_check?(move) }
+  end
+  
+  def move(end_pos)
+    @board[pos] = nil
+    @board[end_pos] = self
+    @pos = end_pos
   end
 
   protected
@@ -50,10 +56,5 @@ class Piece
     arr1.zip(arr2).map { |el| el.inject(:+) }
   end
 
-  def move(end_pos)
-    @board[pos] = nil
-    @board[end_pos] = self
-    @pos = end_pos
-  end
 
 end
