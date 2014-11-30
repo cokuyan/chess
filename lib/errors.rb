@@ -22,5 +22,11 @@ class InvalidMoveError < ChessError
   end
 end
 
+class EnemyPieceError < ChessError
+  def message
+    "You chose an enemy piece!"
+  end
+end
+
 class InvalidPositionError < ChessError
 end
