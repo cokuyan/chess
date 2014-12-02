@@ -18,7 +18,4 @@ email: chiryoku@gmail.com
 
 [App Academy](http://www.appacademy.io/#p-home)
 
-
-
-
 [chess wiki]: http://en.wikipedia.org/wiki/Chess
