@@ -40,7 +40,9 @@ class Pawn < Piece
 
   def en_passant(end_pos)
     passant_pos = [pos[0], end_pos[1]]
+    taken_piece = @board[passant_pos]
     @board[passant_pos] = nil
+    @board.taken_pieces << taken_piece
   end
 
   def has_moved?

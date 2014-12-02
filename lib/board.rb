@@ -3,8 +3,11 @@ require_relative 'errors.rb'
 
 class Board
 
+  attr_accessor :taken_pieces
+
   def initialize(setup = true)
     @board = Array.new(8) {Array.new(8)}
+    @taken_pieces = []
     initialize_sides if setup
   end
 
@@ -28,12 +31,14 @@ class Board
 
   def move_piece(start, end_pos)
     piece = self[start]
+    taken_piece = self[end_pos]
 
     raise PieceSelectionError if piece.nil?
     raise InCheckError if piece.move_into_check?(end_pos)
     raise InvalidMoveError unless piece.valid_moves.include?(end_pos)
 
     move_piece!(start, end_pos)
+    taken_pieces << taken_piece if taken_piece
   end
 
   def move_piece!(start, end_pos)

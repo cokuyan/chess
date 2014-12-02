@@ -13,8 +13,10 @@ class Game
   def run
     until over?
       begin
+        puts @board.taken_pieces.select{|piece| piece.color == @current_player.color}.map(&:render).join(" ")
         board.render
-        puts "#{@color.to_s.capitalize}'s turn"
+        puts @board.taken_pieces.reject{|piece| piece.color == @current_player.color}.map(&:render).join(" ")
+        puts "#{@current_player.color.to_s.capitalize}'s turn"
         puts "You are in check" if board.in_check?(@current_player.color)
 
         start, end_pos = @current_player.get_move(@board)
@@ -142,7 +144,7 @@ class ComputerPlayer
   def get_move(board)
     @board = board
 
-    loop do
+    while true
       piece = board.all_pieces(color).sample
       move = piece.valid_moves.sample
       break unless move.nil?
