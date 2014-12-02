@@ -11,10 +11,6 @@ This is the game Chess programmed in Ruby 2.1.2, during my time at App Academy. 
 + To quit a game, simply enter 'quit' when prompted.
 + Enjoy!
 
-#### Known Bugs
-+ While implementing a computer AI, the game would raise a NoMethodError after a good number of moves. This may occur with two human players as well, once they are far enough into the game. If this happens, please let me know since I am still unsure of why this bug is occurring.
-+ There is also another potential bug with pawns being able to jump over a piece in front of it. This one may have been corrected already though.
-
 #### Contact
 Cihangir "John" Okuyan
 
