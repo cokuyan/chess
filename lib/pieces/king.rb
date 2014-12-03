@@ -73,14 +73,14 @@ class King < Piece
   end
 
   def can_castle_right?
-    rook = @board[add_arrays(@pos, [0, 3])]
+    rook = @board[[@pos.first, 7]]
     [1, 2].map { |el| add_arrays(@pos, [0, el]) }
           .none? { |pos| !@board[pos].nil? || move_into_check?(pos) } &&
     rook && rook.is_a?(Rook) && !rook.has_moved?
   end
 
   def can_castle_left?
-    rook = @board[add_arrays(@pos, [0, -4])]
+    rook = @board[[@pos.first, 0]]
     [1, 2].map { |el| add_arrays(@pos, [0, -el]) }
           .none? { |pos| !@board[pos].nil? || move_into_check?(pos) } &&
     @board[[@pos[0], 1]].nil? &&

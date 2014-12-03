@@ -13,9 +13,9 @@ class Game
   def run
     until over?
       begin
-        puts @board.taken_pieces.select{|piece| piece.color == @current_player.color}.map(&:render).join(" ")
+        puts @board.taken_pieces.select{|piece| piece.color ==  :white}.map(&:render).join(" ")
         board.render
-        puts @board.taken_pieces.reject{|piece| piece.color == @current_player.color}.map(&:render).join(" ")
+        puts @board.taken_pieces.select{|piece| piece.color == :black}.map(&:render).join(" ")
         puts "#{@current_player.color.to_s.capitalize}'s turn"
         puts "You are in check" if board.in_check?(@current_player.color)
 
