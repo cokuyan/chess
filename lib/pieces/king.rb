@@ -36,7 +36,6 @@ class King < Piece
 
   def move(end_pos)
     @has_moved = true
-    castle if (end_pos[1] - pos[1]).abs == 2
     super
   end
 
@@ -44,8 +43,6 @@ class King < Piece
     moves = super
     moves + castle_moves
   end
-
-  private
 
   def castle
     if pos[1] == 2
@@ -58,6 +55,9 @@ class King < Piece
       @board[rook_pos].move(end_pos)
     end
   end
+
+
+  private
 
   def castle_moves
     moves = []

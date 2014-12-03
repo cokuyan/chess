@@ -37,6 +37,7 @@ class Board
     raise InCheckError if piece.move_into_check?(end_pos)
     raise InvalidMoveError unless piece.valid_moves.include?(end_pos)
 
+    piece.castle if piece.is_a?(King) && (end_pos[1] - start[1]).abs == 2
     move_piece!(start, end_pos)
     taken_pieces << taken_piece if taken_piece
   end

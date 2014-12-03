@@ -16,6 +16,7 @@ class Game
         puts @board.taken_pieces.select{|piece| piece.color ==  :white}.map(&:render).join(" ")
         board.render
         puts @board.taken_pieces.select{|piece| piece.color == :black}.map(&:render).join(" ")
+
         puts "#{@current_player.color.to_s.capitalize}'s turn"
         puts "You are in check" if board.in_check?(@current_player.color)
 
@@ -34,6 +35,9 @@ class Game
         switch_player
       rescue ChessError => e
         puts e.message
+        retry
+      rescue ArgumentError
+        puts "Invalid Move!"
         retry
       end
     end
@@ -84,9 +88,6 @@ class HumanPlayer
 
   def get_move(board)
     @board = board
-    @board.render
-    puts "#{@color.to_s.capitalize}'s turn"
-    puts "You are in check" if @board.in_check?(@color)
     puts
     puts "Enter piece to move, 'save' to save, or 'quit' to quit"
 
@@ -106,7 +107,7 @@ class HumanPlayer
 
   def convert(position)
     first = position[0].ord - 'a'.ord
-    second = 8 - position[1].to_i
+    second = 8 - Integer(position[1])
 
     [second, first]
   end

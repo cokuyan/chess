@@ -4,18 +4,13 @@ class Piece
   attr_accessor :pos
   attr_reader :color
 
-  # has_moved only in initialize for other classes (king, pawn)
   def initialize(pos, board, color, has_moved = false)
     @pos, @board, @color = pos, board, color
-
-    #piece places self
     @board[@pos] = self
-    # @has_moved = has_moved # may change
   end
 
   def moves
     raise NotImplementedError
-    # return array of places can move
   end
 
   def has_moved?
@@ -25,21 +20,17 @@ class Piece
   def dup(board)
     self.class.new(@pos, board, @color, has_moved?)
   end
-############################################
+
   def move_into_check?(pos)
     test_board = @board.dup
-    # p test_board[self.pos].class
-    # p self.pos
-    # p pos
     test_board.move_piece!(self.pos, pos)
     test_board.in_check?(self.color)
   end
-############################################
 
   def valid_moves
     self.moves.reject { |move| move_into_check?(move) }
   end
-  
+
   def move(end_pos)
     @board[pos] = nil
     @board[end_pos] = self
