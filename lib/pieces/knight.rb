@@ -19,7 +19,7 @@ class Knight < Piece
     DELTAS
   end
 
-  def render
+  def symbol
     color == :white ? '♘' : "♞"
   end
 

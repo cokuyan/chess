@@ -8,7 +8,7 @@ class Queen < Piece
     sideways + diagonal
   end
 
-  def render
+  def symbol
     color == :white ? '♕' : "♛"
   end
 

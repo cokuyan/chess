@@ -7,6 +7,7 @@ class Piece
   def initialize(pos, board, color, has_moved = false)
     @pos, @board, @color = pos, board, color
     @board[@pos] = self
+    @just_moved = false
   end
 
   def moves
@@ -15,6 +16,10 @@ class Piece
 
   def has_moved?
     @has_moved
+  end
+
+  def just_moved?
+    @just_moved
   end
 
   def dup(board)
@@ -35,6 +40,14 @@ class Piece
     @board[pos] = nil
     @board[end_pos] = self
     @pos = end_pos
+    @just_moved = true
+  end
+
+  def render
+    symbol = self.symbol
+    symbol = symbol.on_light_black if just_moved?
+    @just_moved = false
+    symbol
   end
 
   protected

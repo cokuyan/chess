@@ -21,7 +21,7 @@ class King < Piece
     @has_moved = has_moved
   end
 
-  def render
+  def symbol
     symbol = color == :white ? '♔' : '♚'
     @board.in_check?(color)? symbol.on_red : symbol
   end

@@ -8,7 +8,7 @@ class Bishop < Piece
     diagonal
   end
 
-  def render
+  def symbol
     color == :white ? '♗' : "♝"
   end
 

@@ -15,7 +15,7 @@ class Pawn < Piece
     forward_moves + diag_moves
   end
 
-  def render
+  def symbol
     color == :white ? '♙' : "♟"
   end
 

@@ -9,7 +9,7 @@ class Rook < Piece
     @has_moved = has_moved
   end
 
-  def render
+  def symbol
     color == :white ? '♖' : "♜"
   end
 
