@@ -37,6 +37,7 @@ class Board
     raise InCheckError if piece.move_into_check?(end_pos)
     raise InvalidMoveError unless piece.valid_moves.include?(end_pos)
 
+    # make King#maybe_castle instead?
     piece.castle if piece.is_a?(King) && (end_pos[1] - start[1]).abs == 2
     move_piece!(start, end_pos)
     taken_pieces << taken_piece if taken_piece
@@ -55,19 +56,18 @@ class Board
 
   # need to refactor
   def render
-    puts "   " + ('A'..'H').to_a.join("   ")
-    puts " ┌" + "───┬" * 7 + "───┐"
-    @board.each_with_index do |row, index|
-      print (8-index).to_s
-      row.each do |piece|
-        print piece.nil? ? "│   " : "│ #{piece.render} "
-      end
-      print "│" + (8-index).to_s
-      puts
-      puts " ├" + "───┼" * 7 + "───┤" unless index == 7
-    end
-    puts " └" + "───┴" * 7 + "───┘"
-    puts "   " + ('A'..'H').to_a.join("   ")
+    "   " + ('A'..'H').to_a.join("   ") + "\n" +
+    " ┌" + ("───┬" * 7) + "───┐" + "\n" +
+    @board.map.with_index do |row, index|
+      section = ((8 - index).to_s +
+      row.map do |square|
+        square.nil? ? "│   " : "│ #{square.render} "
+      end.join +
+      "│" + (8-index).to_s + "\n")
+      index == 7 ? section : section + " ├" + ("───┼" * 7) + "───┤" + "\n"
+    end.join +
+    " └" + ("───┴" * 7) + "───┘" + "\n" +
+    "   " + ('A'..'H').to_a.join("   ")
   end
 
   def stalemate?(color)

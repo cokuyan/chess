@@ -25,6 +25,7 @@ class Pawn < Piece
     @moved_two = ((pos[0] - end_pos[0]).abs == 2)
     # also check if en passant
     # put checks into own method?
+    # like maybe_en_passant (happens only if checks pass)
     en_passant(end_pos) if @board[end_pos].nil? && diag_moves.include?(end_pos)
 
     super
@@ -55,9 +56,9 @@ class Pawn < Piece
     move = add_arrays(@pos, move_dir)
     if @board.on_board?(move) && @board[move].nil?
       moves << move
-      return moves if has_moved?
+      # return moves if has_moved? # necessary?
       move = add_arrays(move, move_dir)
-      moves << move unless @board[move]
+      moves << move unless !has_moved? && @board[move]
     end
 
     moves

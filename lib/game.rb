@@ -14,7 +14,7 @@ class Game
     until over?
       begin
         puts @board.taken_pieces.select{|piece| piece.color ==  :white}.map(&:render).join(" ")
-        board.render
+        puts board.render
         puts @board.taken_pieces.select{|piece| piece.color == :black}.map(&:render).join(" ")
 
         puts "#{@current_player.color.to_s.capitalize}'s turn"
@@ -29,6 +29,7 @@ class Game
         end
         @board.move_piece(start, end_pos)
         # check for pawn promotion
+        # Pawn#maybe_promote instead?
         piece = @board[end_pos]
         @current_player.promote(piece) if piece.is_a?(Pawn) && [0,7].include?(end_pos[0])
 
@@ -42,7 +43,7 @@ class Game
       end
     end
 
-    @board.render
+    puts @board.render
     end_game
   end
 
