@@ -56,7 +56,6 @@ class Pawn < Piece
     move = add_arrays(@pos, move_dir)
     if @board.on_board?(move) && @board[move].nil?
       moves << move
-      # return moves if has_moved? # necessary?
       move = add_arrays(move, move_dir)
       moves << move unless !has_moved? && @board[move]
     end
